@@ -1,0 +1,24 @@
+-- Örnek: companies tablosundan en yüksek ikinci number_of_employees değeri olan company ve number_of_employees değerlerini çağırın.
+
+-- yol OFFSET ve FETCH NEXT kullanarak
+SELECT company, number_of_employees
+FROM companies
+order by number_of_employees DESC   --BUYUKTEN KUCUGE SİRALA
+OFFSET 1 ROW   --sutunu atla
+fetch next 1 row only; --gelecek olandan bir tanesini satiri ver
+
+--2. yol subquery ile
+select company, number_of_employees
+from companies
+where number_of_employees = (select max(number_of_employees)
+							 from companies
+							 where number_of_employees < (select max(number_of_employees)
+														  from companies))
+
+-- Örnek: number_of_employees değeri ortalama çalışan sayısından az olan number_of_employees değerlerini 16000 olarak UPDATE edin.
+UPDATE companies
+SET number_of_employees = 16000
+where number_of_employees < (select avg(number_of_employees)
+from companies)
+
+select * from companies
